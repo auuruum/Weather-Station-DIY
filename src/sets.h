@@ -4,6 +4,11 @@
 
 #define LED_PIN 2
 
+#define DHT11_PIN  15
+
+extern float tempC;
+extern float humidity;
+
 #include <GyverDBFile.h>
 #include <SettingsGyver.h>
 

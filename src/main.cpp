@@ -2,6 +2,10 @@
 
 #include "sets.h"
 
+#include <DHT.h>
+
+DHT dht11(DHT11_PIN, DHT11);
+
 void setup() {
     Serial.begin(115200);
     Serial.println();
@@ -15,5 +19,8 @@ void setup() {
 }
 
 void loop() {
+    humidity = dht11.readHumidity();
+    tempC = dht11.readTemperature();
+    
     sett_loop();
 }

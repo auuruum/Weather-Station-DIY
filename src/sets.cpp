@@ -3,6 +3,9 @@
 #include <LittleFS.h>
 #include <WiFiConnector.h>
 
+float tempC = 0.0;
+float humidity = 0.0;
+
 GyverDBFile db(&LittleFS, "/data.db");
 SettingsGyver sett(PROJECT_NAME, &db);
 
@@ -17,6 +20,8 @@ static void build(sets::Builder& b) {
         db.update();
     }
 
+    b.LinearGauge(101, "Temperature", 0, 50, "°C", tempC, sets::Colors::Red);
+    b.LinearGauge(102, "Humidity", 0, 100, "%", humidity, sets::Colors::Blue);
 
     if (b.beginMenu("WiFi")) {
         b.Input(kk::wifi_ssid, "SSID");
@@ -27,13 +32,24 @@ static void build(sets::Builder& b) {
         if (b.Button("Connect")) {
             WiFiConnector.connect(db[kk::wifi_ssid], db[kk::wifi_pass]);
         }
+        
+        b.Label("Status", WiFi.isConnected() ? "Connected" : "Disconnected", 
+                WiFi.isConnected() ? sets::Colors::Green : sets::Colors::Red);
+        
+        if (WiFi.isConnected()) {
+            b.Label("IP Address", WiFi.localIP().toString());
+        }
+        
         b.endMenu();
     }
 }
 
 // ========== update ==========
 static void update(sets::Updater& u) {
-   digitalWrite(LED_PIN, db[kk::switch_state] ? HIGH : LOW);
+    digitalWrite(LED_PIN, db[kk::switch_state] ? HIGH : LOW);
+
+    u.update(101, tempC);
+    u.update(102, humidity);
 }
 
 // ========== begin ==========
