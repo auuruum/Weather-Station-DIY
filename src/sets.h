@@ -18,6 +18,7 @@
 
 // Other constants
 #define DHT_READ_INTERVAL 3000  // milliseconds
+#define API_PORT 81 // Dont set to 80, it is used by settings server
 
 // Dont touch below this line
 extern float tempC;
