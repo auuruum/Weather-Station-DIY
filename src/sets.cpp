@@ -7,6 +7,7 @@
 
 float tempC = 0.0;
 float humidity = 0.0;
+float pressure = 0.0;
 
 GyverDBFile db(&LittleFS, "/data.db");
 SettingsGyver sett(PROJECT_NAME, &db);
@@ -24,6 +25,7 @@ static void build(sets::Builder& b) {
 
     b.LinearGauge(101, "Temperature", MIN_TEMP_C, MAX_TEMP_C, "°C", tempC, getColorByTemp(tempC));
     b.LinearGauge(102, "Humidity", MIN_HUMIDITY, MAX_HUMIDITY, "%", humidity, sets::Colors::Blue);
+    b.LinearGauge(103, "Pressure", MIN_PRESSURE, MAX_PRESSURE, "hPa", pressure, sets::Colors::Aqua);
 
     if (b.beginMenu("WiFi")) {
         b.Input(kk::wifi_ssid, "SSID");
@@ -54,6 +56,8 @@ static void update(sets::Updater& u) {
     u.updateColor(101, getColorByTemp(tempC));
     
     u.update(102, humidity);
+
+    u.update(103, pressure);
 }
 
 // ========== begin ==========
