@@ -1,6 +1,8 @@
 #pragma once
 
+// Can easly be modified to suit your project
 #define PROJECT_NAME "Weather Station"
+#define LOCATION_ALTITUDE 112 // meters above sea level (112 for Vilnius)
 
 // Pin definitions
 #define LED_PIN 2
@@ -28,6 +30,7 @@
 #define SENSOR_READ_INTERVAL 3000  // milliseconds
 #define API_PORT 81 // Dont set to 80, it is used by settings server
 #define SEALEVELPRESSURE_HPA (1013.25)
+constexpr char32_t FORECASTER_INTERVAL_MS = 30UL * 60UL * 1000UL;   // 30 minutes
 
 // Dont touch below this line
 extern float tempC;
