@@ -42,6 +42,14 @@ void setup() {
     Serial.print("SETUP | LED is now ");
     Serial.println(db[kk::switch_state] ? "ON" : "OFF");
 
+    if (!MDNS.begin("weather-station")) {
+        Serial.println("Error setting up MDNS responder!");
+        while(1) {
+        delay(1000);
+        }
+    }
+    Serial.println("mDNS responder started");
+
     if (!bmp.begin(0x76)) {
         Serial.println("Could not find a valid BMP280 sensor, check wiring!");
         while (1);
@@ -58,7 +66,8 @@ void setup() {
     // Should make refactor in furure and put to separate function for cleaner code
     tempC = bmp.readTemperature();
     pressure = bmp.readPressure() / 100.0F;
-    if (!isnan(tempC) && !isnan(pressure)) {
+    humidity = dht11.readHumidity();
+    if (!isnan(tempC) && !isnan(pressure) && !isnan(humidity)) {
         Serial.println("initial forecast sensor read successful");
         cond.addP(pressure * 100.0F, tempC);
     } else {
@@ -72,6 +81,12 @@ void setup() {
     server.on("/weather", HTTP_GET, [](AsyncWebServerRequest *request){
         if (isnan(tempC) || isnan(humidity) || isnan(pressure)) {
             request->send(500, "text/plain", "Failed to read from sensor");
+            Serial.print("DEBUG| ");
+            Serial.print(tempC);
+            Serial.print(" ");
+            Serial.print(humidity);
+            Serial.print(" ");
+            Serial.println(pressure);
             return;
         }
 
