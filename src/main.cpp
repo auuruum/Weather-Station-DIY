@@ -50,6 +50,8 @@ void setup() {
     }
     Serial.println("mDNS responder started");
 
+    dht11.begin();
+
     if (!bmp.begin(0x76)) {
         Serial.println("Could not find a valid BMP280 sensor, check wiring!");
         while (1);
@@ -63,8 +65,11 @@ void setup() {
                     Adafruit_BMP280::FILTER_X16,  
                     Adafruit_BMP280::STANDBY_MS_500);
 
+    delay(2000);
+
     // Should make refactor in furure and put to separate function for cleaner code
     tempC = bmp.readTemperature();
+    humidity = dht11.readHumidity();
     pressure = bmp.readPressure() / 100.0F;
     if (!isnan(tempC) && !isnan(pressure)) {
         Serial.println("initial forecast sensor read successful");
