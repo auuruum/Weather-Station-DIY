@@ -42,6 +42,14 @@ void setup() {
     Serial.print("SETUP | LED is now ");
     Serial.println(db[kk::switch_state] ? "ON" : "OFF");
 
+    if (!MDNS.begin("weather-station")) {
+        Serial.println("Error setting up MDNS responder!");
+        while(1) {
+        delay(1000);
+        }
+    }
+    Serial.println("mDNS responder started");
+
     if (!bmp.begin(0x76)) {
         Serial.println("Could not find a valid BMP280 sensor, check wiring!");
         while (1);
